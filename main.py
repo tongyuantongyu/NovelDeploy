@@ -1,9 +1,13 @@
 import hashlib
 import hmac
 import os
+import sys
 import traceback
 import asyncio
 import importlib
+
+if sys.platform == 'win32':
+    import subprocess
 
 import tornado.web
 import tornado.httpserver
@@ -82,7 +86,10 @@ class ForceUpdateHandler(tornado.web.RequestHandler):
             self.send_error(403)
             return
         try:
-            await asyncio.create_subprocess_shell(f"git submodule update --remote {project}")
+            if sys.platform == 'win32':
+                subprocess.call(f"git submodule update --remote {project}", shell=True)
+            else:
+                await asyncio.create_subprocess_shell(f"git submodule update --remote {project}")
             for task in scheduled_tasks[project]:
                 await task.force_run()
         except Exception as e:

@@ -1,0 +1,3 @@
+[submodule "n7945fn"]
+	path = n7945fn
+	url = git@github.com:tongyuantongyu/n7945fn.git
