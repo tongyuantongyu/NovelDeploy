@@ -1,0 +1,6 @@
+__pycache__/
+storage/
+artifacts/
+*.py[cod]
+*$py.class
+_*
