@@ -15,7 +15,6 @@ LK = discuz.Discuz('https://www.lightnovel.cn', session)
 
 
 def work(project, _vars):
-    return
     post_hash = storage.Storage(project, 'lightnovel')
     menu_item_list = []
     for section_title, files in _vars.menu.items():

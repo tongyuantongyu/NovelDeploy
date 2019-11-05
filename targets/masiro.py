@@ -15,7 +15,6 @@ Masiro = discuz.Discuz('https://masiro.moe', session)
 
 
 def work(project, _vars):
-    return
     post_hash = storage.Storage(project, 'masiro')
     menu_item_list = []
     for section_title, files in _vars.menu.items():
