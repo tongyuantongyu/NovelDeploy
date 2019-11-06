@@ -104,6 +104,7 @@ class ForceUpdateHandler(tornado.web.RequestHandler):
 
 application = tornado.web.Application([
     (r"/(robots.txt)", tornado.web.StaticFileHandler, {'path': ''}),
+    (r"/(favicon.ico)", tornado.web.StaticFileHandler, {'path': ''}),
     (rf"/force_update_{_secret.decode()}/(?P<project>.*)", ForceUpdateHandler),
     (r"/update/(?P<project>.*)", UpdateHandler),
     (r"/(.*)/", DirHandler),
