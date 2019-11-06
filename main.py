@@ -12,9 +12,11 @@ if sys.platform == 'win32':
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
+from tornado.log import enable_pretty_logging
+enable_pretty_logging()
 
 import config
-from _credential import _secret
+from _credential import _secret, _cert_dir
 from toolbox import scheduler
 from toolbox.tools import Now
 
@@ -139,6 +141,6 @@ def schedule(projects):
 if __name__ == "__main__":
     scheduled_tasks = schedule(config.tasks)
 
-    server = tornado.httpserver.HTTPServer(application)
+    server = tornado.httpserver.HTTPServer(application, ssl_options=_cert_dir)
     server.listen(4443)
     tornado.ioloop.IOLoop.current().start()
