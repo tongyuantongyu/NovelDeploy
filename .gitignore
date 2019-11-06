@@ -4,3 +4,5 @@ artifacts/
 *.py[cod]
 *$py.class
 _*
+config.py
+.idea/
