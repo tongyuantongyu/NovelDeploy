@@ -36,7 +36,7 @@ def work(project, _vars):
             else:
                 print('Post', end='', flush=True)
                 forum, thread, post = \
-                    Masiro.post_thread(_vars.masiro_forum_id, _vars.masiro_thread_type, title, content)
+                    Masiro.post_thread(_vars.masiro_forum_id, _vars.masiro_thread_type(section_title, file), title, content)
                 post_hash.add_record(storage.Record.new_content(file, forum, thread, post, title, content))
                 print('ed ', end='', flush=True)
             menu_item_list.append(f'[url=https://masiro.moe/forum.php?mod=viewthread&tid={thread}]{title}[/url]')
