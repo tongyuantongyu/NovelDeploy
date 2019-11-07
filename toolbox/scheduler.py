@@ -39,3 +39,30 @@ class ScheduledTask:
     def __del__(self):
         if self._ok:
             self.cancel()
+
+
+class PeriodicalTask:
+    def __init__(self, frequency, task: Callable, args):
+        self.frequency = frequency
+        self._task = task
+        self._args = args
+        self._ok = True
+        self._worker = asyncio.ensure_future(self._schedule())
+        print(f'[{now}] Task {self._task.__name__} has been scheduled to run per {self.frequency} seconds.')
+
+    async def _schedule(self):
+        while self._ok:
+            await asyncio.sleep(self.frequency)
+            await asyncio.get_event_loop().run_in_executor(None, self._task, *self._args)
+
+    async def force_run(self):
+        await asyncio.get_event_loop().run_in_executor(None, self._task, *self._args)
+
+    def cancel(self):
+        self._ok = False
+        self._worker.cancel()
+        print(f'[{now}] Task {self._task.__name__} has been canceled.')
+
+    def __del__(self):
+        if self._ok:
+            self.cancel()

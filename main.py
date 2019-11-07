@@ -140,9 +140,12 @@ def schedule(projects):
 
 
 if __name__ == "__main__":
-    with Log():
+    with Log() as flusher:
         scheduled_tasks = schedule(config.tasks)
 
+        _flush_log_task = scheduler.PeriodicalTask(360, flusher, ())
+
         server = tornado.httpserver.HTTPServer(application, ssl_options=_cert_dir)
+        # server = tornado.httpserver.HTTPServer(application)
         server.listen(4443)
         tornado.ioloop.IOLoop.current().start()

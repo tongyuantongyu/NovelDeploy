@@ -24,6 +24,7 @@ class Log:
         self._err_write = sys.stderr.write
         sys.stdout.write = self.get_writer('out')
         sys.stderr.write = self.get_writer('err')
+        return self.flush_log
 
     def get_writer(self, target):
         def _writer(text):
@@ -35,6 +36,11 @@ class Log:
                 self._err_write(text)
         return _writer
 
+    def flush_log(self):
+        self._log_out.flush()
+        self._log_err.flush()
+        self._out_write(f'[{self.now}] Log auto save finished.\n')
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         import sys
         sys.stdout.write = self._out_write
@@ -42,6 +48,8 @@ class Log:
         if exc_type:
             import traceback
             self._log_err.write(f'[{self.now}] {exc_type.__name__}: {exc_val}\n{"".join(traceback.format_tb(exc_tb))}\n')
+        self._log_out.write(f'[{self.now}] ---------- Logger exit. ----------\n\n')
         self._log_out.close()
+        self._log_err.write(f'[{self.now}] ---------- Logger exit. ----------\n\n')
         self._log_err.close()
         self.working = False
