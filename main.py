@@ -18,7 +18,7 @@ enable_pretty_logging()
 import config
 from _credential import _secret, _cert_dir
 from toolbox import scheduler
-from toolbox.tools import Now
+from toolbox.tools import Now, Log
 
 projects = config.tasks.keys()
 now = Now()
@@ -140,8 +140,9 @@ def schedule(projects):
 
 
 if __name__ == "__main__":
-    scheduled_tasks = schedule(config.tasks)
+    with Log():
+        scheduled_tasks = schedule(config.tasks)
 
-    server = tornado.httpserver.HTTPServer(application, ssl_options=_cert_dir)
-    server.listen(4443)
-    tornado.ioloop.IOLoop.current().start()
+        server = tornado.httpserver.HTTPServer(application, ssl_options=_cert_dir)
+        server.listen(4443)
+        tornado.ioloop.IOLoop.current().start()
