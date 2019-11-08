@@ -72,7 +72,7 @@ class UpdateHandler(tornado.web.RequestHandler):
             self.send_error(403)
             return
         try:
-            await asyncio.create_subprocess_shell(f"git submodule update --remote {project}")
+            await asyncio.create_subprocess_shell(f"{project}")
         except Exception as e:
             print(traceback.format_exc())
             print(f"[{now}] Some error occurred during update: {e}")
@@ -119,7 +119,7 @@ def target(project, target_name):
     except FileExistsError:
         pass
     importlib.import_module(f'targets.{target_name}', 'targets')\
-        .work(project, importlib.import_module(f'{project}.config', project))
+        .work(project, importlib.reload(importlib.import_module(f'{project}.config', project)))
     print(f'[{now}] Target {target_name}({project}): Finished.')
 
 
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     with Log() as flusher:
         scheduled_tasks = schedule(config.tasks)
 
-        _flush_log_task = scheduler.PeriodicalTask(360, flusher, ())
+        _flush_log_task = scheduler.PeriodicalTask(300, flusher, ())
 
         server = tornado.httpserver.HTTPServer(application, ssl_options=_cert_dir)
         # server = tornado.httpserver.HTTPServer(application)

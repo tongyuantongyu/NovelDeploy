@@ -11,12 +11,13 @@ class Log:
     working = False
     now = Now()
 
-    def __init__(self, out='out.log', err='err.log'):
+    def __init__(self, out='out.log', err='err.log', flush_info=False):
         if self.working:
             raise RuntimeError("Another Logger already working.")
         self.working = True
         self._log_out = open(out, 'a')
         self._log_err = open(err, 'a')
+        self.flush_info = flush_info
 
     def __enter__(self):
         import sys
@@ -39,7 +40,8 @@ class Log:
     def flush_log(self):
         self._log_out.flush()
         self._log_err.flush()
-        self._out_write(f'[{self.now}] Log auto save finished.\n')
+        if self.flush_info:
+            self._out_write(f'[{self.now}] Log auto save finished.\n')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         import sys
