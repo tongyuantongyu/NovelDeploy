@@ -15,11 +15,12 @@ def get_delta(hour, minute, second):
 
 
 class ScheduledTask:
-    def __init__(self, target_time, task: Callable, args):
+    def __init__(self, target_time, task: Callable, args, once=False):
         self.target_time = target_time
         self._task = task
         self._args = args
         self._ok = True
+        self._once = once
         self._worker = asyncio.ensure_future(self._schedule())
         print(f'[{now}] Task {self._task.__name__} has been scheduled at ' + '{:0>2}:{:0>2}:{:0>2}'.format(*self.target_time))
 
@@ -27,6 +28,8 @@ class ScheduledTask:
         while self._ok:
             await asyncio.sleep(get_delta(*self.target_time))
             await asyncio.get_event_loop().run_in_executor(None, self._task, *self._args)
+            if self._once:
+                self._ok = False
 
     async def force_run(self):
         await asyncio.get_event_loop().run_in_executor(None, self._task, *self._args)
