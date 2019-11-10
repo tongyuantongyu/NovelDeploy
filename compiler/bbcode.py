@@ -128,6 +128,7 @@ def compile(tex, ruby_available=True, sub_characters=None):
         tex = tex.decode()
     except AttributeError:
         pass
+    tex = tex.replace("\r\n", "\n").replace("\r", "\n")
     sl = [i for i in tex.split('\n') if i if not i.startswith('%')]
     ol = []
     if not sl or not sl[0].startswith('\\'):
