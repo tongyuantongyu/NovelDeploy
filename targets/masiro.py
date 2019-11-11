@@ -23,6 +23,7 @@ def work(project, _vars):
         for file in files:
             print(file, end='-', flush=True)
             title, content = bbcode.compile(open(f'./{project}/{file}', "rb").read(), sub_characters=_vars.sub_characters)
+            title = _vars.masiro_title_format(file, section_title, title)
             if file in post_hash:
                 record = post_hash[file]
                 forum, thread, post = record.pos_info()
