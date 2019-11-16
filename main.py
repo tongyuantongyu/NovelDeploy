@@ -72,7 +72,7 @@ class UpdateHandler(tornado.web.RequestHandler):
             self.send_error(403)
             return
         try:
-            await asyncio.create_subprocess_shell(f"git submodule update --remote {project}")
+            await (await asyncio.create_subprocess_shell(f"git submodule update --remote {project}")).wait()
             for task in scheduled_tasks[project]:
                 task.run()
         except Exception as e:
