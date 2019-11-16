@@ -73,6 +73,8 @@ class UpdateHandler(tornado.web.RequestHandler):
             return
         try:
             await asyncio.create_subprocess_shell(f"git submodule update --remote {project}")
+            for task in scheduled_tasks[project]:
+                task.run()
         except Exception as e:
             print(traceback.format_exc())
             print(f"[{now}] Some error occurred during update: {e}")
@@ -123,6 +125,22 @@ def target(project, target_name):
     print(f'[{now}] Target {target_name}({project}): Finished.')
 
 
+# def schedule(projects):
+#     tasks = dict()
+#     hour, minute, second = config.time_start
+#     count = 0
+#     for project, targets in projects.items():
+#         tasks[project] = []
+#         print(f'[{now}] Scheduling for project {project}: Start.')
+#         for target_name in targets:
+#             print(f'[{now}] Schedule Target {target_name}({project}).')
+#             tasks[project].append(scheduler.ScheduledTask(
+#                     (hour + count // 60, minute + count % 60, second), target, (project, target_name)))
+#             count += 1
+#         print(f'[{now}] Scheduling for project {project}: Finished.')
+#     return tasks
+
+
 def schedule(projects):
     tasks = dict()
     hour, minute, second = config.time_start
@@ -132,8 +150,8 @@ def schedule(projects):
         print(f'[{now}] Scheduling for project {project}: Start.')
         for target_name in targets:
             print(f'[{now}] Schedule Target {target_name}({project}).')
-            tasks[project].append(scheduler.ScheduledTask(
-                    (hour + count // 60, minute + count % 60, second), target, (project, target_name)))
+            tasks[project].append(scheduler.AutoPostponeTask(
+                    ((21, 0, 0), (hour + count // 60, minute + count % 60, second)), target, (project, target_name)))
             count += 1
         print(f'[{now}] Scheduling for project {project}: Finished.')
     return tasks
