@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
         _flush_log_task = scheduler.PeriodicalTask(300, flusher, ())
 
-        server = tornado.httpserver.HTTPServer(application, ssl_options=_cert_dir)
+        server = tornado.httpserver.HTTPServer(application, xheaders=True)
         # server = tornado.httpserver.HTTPServer(application)
-        server.listen(4443)
+        server.listen(4001)
         tornado.ioloop.IOLoop.current().start()
