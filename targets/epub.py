@@ -9,7 +9,7 @@ from compiler import epub_html
 
 now = Now()
 
-css = """body{padding:0;margin:0;line-height:1.6em;text-align:justify}
+css = """body{padding:0;margin:0;line-height:1.6;text-align:justify}
 p{text-indent:2em;display:block;margin:auto;}
 div{margin:0;padding:0;text-align:justify}
 h1{font-size:1.4em;margin-top:1em;margin-bottom:1.2em;font-weight:bold;text-align:center !important}
