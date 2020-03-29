@@ -52,6 +52,8 @@ def gen_note_html(note):
 
 
 def format_line(source_line: str, fts: Counter, ofs: Counter) -> str:
+    source_line = re.sub(r'(?<!\\)%.*', '', source_line)
+    source_line = source_line.replace('\\%', '%')
     if '\\psline' in source_line:
         return '<hr>'
     if '\\vspace{2\\baselineskip}' in source_line:
@@ -98,6 +100,8 @@ def format_line(source_line: str, fts: Counter, ofs: Counter) -> str:
 
 
 def format_title(source_title: str, fts: Counter, ofs: Counter) -> Tuple[str, str]:
+    source_title = re.sub(r'(?<!\\)%.*', '', source_title)
+    source_title = source_title.replace('\\%', '%')
     data = re.search('(?<=\\\\subsection)(\\[(?P<plain_title>.+)\\])?({(?P<title>.+)\\})', source_title)
     t = re.sub(r' {\\jpfont (?P<word>.+?)}', '<span lang="ja">\\g<word></span>', data.group('title'))
     t = re.sub(r'(?<=}){\\jpfont (?P<word>.+?)}(?!\|)', '{<span lang="ja">\\g<word></span>}', t)
