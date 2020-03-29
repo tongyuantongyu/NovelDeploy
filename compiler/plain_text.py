@@ -65,7 +65,7 @@ def gen_ruby_plain_text(match: Match) -> str:
 
 def format_line(source_line: str, fts: FootnoteStorage, ofs: OFootnoteStorage) -> str:
     source_line = re.sub(r'(?<!\\)%.*', '', source_line)
-    source_line = source_line.replace('\\%', '%')
+    source_line = source_line.replace('\\%', '%').rstrip(' ')
     if '\\psline' in source_line:
         return '-' * 30
     if '\\vspace{2\\baselineskip}' in source_line:
@@ -100,7 +100,7 @@ def format_line(source_line: str, fts: FootnoteStorage, ofs: OFootnoteStorage) -
 
 def format_title(source_title: str, fts: FootnoteStorage, ofs: OFootnoteStorage) -> str:
     source_title = re.sub(r'(?<!\\)%.*', '', source_title)
-    source_title = source_title.replace('\\%', '%')
+    source_title = source_title.replace('\\%', '%').rstrip(' ')
     data = re.search('(?<=\\\\subsection)(\\[(?P<plain_title>.+)\\])?({(?P<title>.+)\\})', source_title)
     t = re.sub(r' {\\jpfont (?P<word>.+?)}', '\\g<word>', data.group('title'))
     t = re.sub(r'(?<=}){\\jpfont (?P<word>.+?)}(?!\|)', '{\\g<word>}', t)
