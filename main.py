@@ -1,10 +1,12 @@
 import hashlib
 import hmac
+import json
 import os
 import sys
 import traceback
 import asyncio
 import importlib
+from typing import Dict
 
 if sys.platform == 'win32':
     import subprocess
@@ -72,6 +74,10 @@ class UpdateHandler(tornado.web.RequestHandler):
             self.send_error(403)
             return
         try:
+            status: Dict = json.loads(self.request.body)
+            if status.get('ref') != 'refs/heads/master':
+                self.write("Ignored.")
+                return
             await (await asyncio.create_subprocess_shell(f"git submodule update --remote {project}")).wait()
             for task in scheduled_tasks[project]:
                 task.run()
