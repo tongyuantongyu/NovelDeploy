@@ -14,6 +14,7 @@ if sys.platform == 'win32':
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
+import tornado.escape
 from tornado.log import enable_pretty_logging
 enable_pretty_logging()
 
@@ -74,7 +75,7 @@ class UpdateHandler(tornado.web.RequestHandler):
             self.send_error(403)
             return
         try:
-            status: Dict = json.loads(self.request.body)
+            status: Dict = json.loads(tornado.escape.url_unescape(self.request.body))
             if status.get('ref') != 'refs/heads/master':
                 self.write("Ignored.")
                 return
