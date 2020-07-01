@@ -23,7 +23,7 @@ class ScheduledTask:
         self._once = once
         self._worker = asyncio.ensure_future(self._schedule())
         print(f'[{now}] Task {self._task.__name__} has been scheduled at ' +
-              '{:0>2}:{:0>2}:{:0>2}.'.format(*self.target_time))
+              '{:0>2}:{:0>2}:{:0>2} (UTC).'.format(*self.target_time))
 
     async def _schedule(self):
         while self._ok:
@@ -80,11 +80,11 @@ class AutoPostponeTask:
         self._task = task
         self._args = args
         print(f'[{now}] Task {self._task.__name__} has been created and will be postponed if between ' +
-              '{:0>2}:{:0>2}:{:0>2} and {:0>2}:{:0>2}:{:0>2}.'.format(*self.busy_begin, *self.busy_end))
+              '{:0>2}:{:0>2}:{:0>2} and {:0>2}:{:0>2}:{:0>2} (UTC).'.format(*self.busy_begin, *self.busy_end))
 
     async def _schedule(self):
         print(f'[{now}] Task {self._task.__name__} has been scheduled to run at ' +
-              '{:0>2}:{:0>2}:{:0>2}.'.format(*self.busy_end))
+              '{:0>2}:{:0>2}:{:0>2} (UTC).'.format(*self.busy_end))
         await asyncio.sleep(get_delta(*self.busy_end))
         await asyncio.get_event_loop().run_in_executor(None, self._task, *self._args)
 

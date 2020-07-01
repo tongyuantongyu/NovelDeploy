@@ -75,7 +75,7 @@ class UpdateHandler(tornado.web.RequestHandler):
             self.send_error(403)
             return
         try:
-            status: Dict = json.loads(tornado.escape.url_unescape(self.request.body))
+            status: Dict = json.loads(self.get_argument('payload', '{}'))
             if status.get('ref') != 'refs/heads/master':
                 self.write("Ignored.")
                 return
@@ -158,7 +158,7 @@ def schedule(projects):
         for target_name in targets:
             print(f'[{now}] Schedule Target {target_name}({project}).')
             tasks[project].append(scheduler.AutoPostponeTask(
-                    ((21, 0, 0), (hour + count // 60, minute + count % 60, second)), target, (project, target_name)))
+                    (config.time_stop, (hour + count // 60, minute + count % 60, second)), target, (project, target_name)))
             count += 1
         print(f'[{now}] Scheduling for project {project}: Finished.')
     return tasks
